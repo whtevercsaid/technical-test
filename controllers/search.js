@@ -9,9 +9,20 @@ module.exports={
       
         request(api+`?apikey=${key}&s=${movie}&page=${page}`, (error, response, body)=>{
            
-            if(!error && response.statusCode == 200){
-                let result =  JSON.parse(body)
-                res.send(result)
+            if(error){
+                throw error
+            }
+            else if(!error && response.statusCode == 200){
+                var info = JSON.parse(body)
+                if(info.Response == "True"){
+                    res.send(info);
+                }
+                else{
+                    if(info.Error == "Something went wrong."){
+                        info.Error = "You must input something"
+                    }
+                    res.send(info)
+                }
             }
         })
     }
